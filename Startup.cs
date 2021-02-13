@@ -5,10 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using ToDoProject.Models;
 using ToDoProject.Data;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using ToDoProject.Services;
 
 namespace ToDoProject
 {
@@ -24,10 +22,19 @@ namespace ToDoProject
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
+
             var dbConnection = Configuration.GetConnectionString("ToDoProjectContext");
-            services.AddDbContext<ToDoContext>(options => 
-                options.UseSqlServer(dbConnection)); 
+
+            // configure strongly typed settings object
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+
+            // configure DI for application services
+            services.AddScoped<IUserService, UserService>();
+
+            services.AddControllers().AddNewtonsoftJson(options =>
+                  options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                    );
+
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -38,11 +45,24 @@ namespace ToDoProject
             services.AddDbContext<ToDoProjectContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("ToDoProjectContext")));
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options => Configuration.Bind("JwtSettings", options))
-    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options => Configuration.Bind("CookieSettings", options));
-
-
+            /*
+            string key = Configuration.GetValue<string>("JWTKey");
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                };
+            }); */
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,8 +88,8 @@ namespace ToDoProject
 
             app.UseRouting();
 
-            app.UseAuthentication();
-            
+            app.UseMiddleware<JwtMiddleware>();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

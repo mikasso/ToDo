@@ -14,7 +14,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="5.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.3" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.2" />
@@ -25,14 +28,25 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="5.0.3" />
     <PackageReference Include="Microsoft.Extensions.Identity.Stores" Version="5.0.3" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
+    <Compile Remove="JWTController\**" />
     <Content Remove="$(SpaRoot)**" />
+    <Content Remove="JWTController\**" />
+    <EmbeddedResource Remove="JWTController\**" />
     <None Remove="$(SpaRoot)**" />
+    <None Remove="JWTController\**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="TasksToDo.cs" />
+    <Compile Remove="ToDoContext.cs" />
+    <Compile Remove="ToDoProjectContext.cs" />
+    <Compile Remove="User.cs" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

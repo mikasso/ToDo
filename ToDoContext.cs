@@ -18,7 +18,9 @@ namespace ToDoProject.Models
         }
 
         public virtual DbSet<TasksToDo> TasksToDos { get; set; }
-        public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "Polish_CI_AS");
@@ -26,7 +28,7 @@ namespace ToDoProject.Models
             modelBuilder.Entity<TasksToDo>(entity =>
             {
                 entity.HasKey(e => e.TaskId)
-                    .HasName("PK__TasksToD__DD5D55A20A20D092");
+                    .HasName("PK__TasksToD__DD5D55A246F597BA");
 
                 entity.ToTable("TasksToDo");
 
@@ -45,41 +47,27 @@ namespace ToDoProject.Models
                     .IsUnicode(false)
                     .HasColumnName("name");
 
-                entity.Property(e => e.UserId).HasColumnName("userId");
-
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.TasksToDos)
-                    .HasForeignKey(d => d.UserId)
+                    .HasForeignKey(d => d.Userid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__TasksToDo__userI__787EE5A0");
+                    .HasConstraintName("FK__TasksToDo__Useri__6754599E");
             });
 
-            modelBuilder.Entity<Users>(entity =>
+            modelBuilder.Entity<User>(entity =>
             {
                 entity.Property(e => e.UserId).HasColumnName("userID");
 
-                entity.Property(e => e.Email)
-                    .IsRequired()
-                    .HasMaxLength(255)
-                    .IsUnicode(false)
-                    .HasColumnName("email");
-
                 entity.Property(e => e.Login)
                     .IsRequired()
-                    .HasMaxLength(255)
+                    .HasMaxLength(500)
                     .IsUnicode(false)
                     .HasColumnName("login");
 
                 entity.Property(e => e.Name)
-                    .HasMaxLength(255)
+                    .HasMaxLength(500)
                     .IsUnicode(false)
                     .HasColumnName("name");
-
-                entity.Property(e => e.Password)
-                    .IsRequired()
-                    .HasMaxLength(512)
-                    .IsUnicode(false)
-                    .HasColumnName("password");
             });
 
             OnModelCreatingPartial(modelBuilder);

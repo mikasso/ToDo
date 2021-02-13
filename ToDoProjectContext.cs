@@ -15,7 +15,5 @@ namespace ToDoProject.Data
         }
 
         public DbSet<ToDoProject.Models.TasksToDo> TasksToDo { get; set; }
-
-        public DbSet<ToDoProject.Models.Users> Users { get; set; }
     }
 }

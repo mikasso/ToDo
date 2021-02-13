@@ -21,38 +21,50 @@ namespace ToDoProject.Controllers
             _context = context;
         }
 
+        private int UserId
+        {
+            get
+            {
+                var user = (Users)HttpContext.Items["Users"];
+                return user.UserId;
+            }
+        }
         // GET: api/TasksToDoApi
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<TasksToDo>>> GetTasksToDo()
         {
-            return await _context.TasksToDo.ToListAsync();
+            return await _context.TasksToDo.Where(task => task.UserId == UserId).ToListAsync();
         }
 
-        // GET: api/TasksToDoApi/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<TasksToDo>> GetTasksToDo(int id)
-        {
-            var tasksToDo = await _context.TasksToDo.FindAsync(id);
-
-            if (tasksToDo == null)
-            {
-                return NotFound();
-            }
-
-            return tasksToDo;
-        }
-
-        // PUT: api/TasksToDoApi/5
+        // POST: api/TasksToDoApi
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutTasksToDo(int id, TasksToDo tasksToDo)
+        [HttpPost]
+        [Authorize]
+        public async Task<ActionResult<TasksToDo>> PostTasksToDo(TasksToDo tasksToDo)
         {
-            if (id != tasksToDo.TaskId)
+            if (tasksToDo.UserId != UserId)
+                return Unauthorized("You cannot create task which are not assigned to you");
+
+            _context.TasksToDo.Add(tasksToDo);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction("GetTasksToDo", new { id = tasksToDo.TaskId }, tasksToDo);
+        }
+
+
+        [HttpPut("{id}")]
+        [Authorize]
+        public async Task<IActionResult> PutTask(int id, TasksToDo task)
+        {
+            if (id != task.TaskId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(tasksToDo).State = EntityState.Modified;
+            if (task.UserId != UserId)
+                return Unauthorized("You cannot update task which are not assigned to you");
+
+            _context.Entry(task).State = EntityState.Modified;
 
             try
             {
@@ -73,27 +85,18 @@ namespace ToDoProject.Controllers
             return NoContent();
         }
 
-        // POST: api/TasksToDoApi
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<TasksToDo>> PostTasksToDo(TasksToDo tasksToDo)
-        {
-            _context.TasksToDo.Add(tasksToDo);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetTasksToDo", new { id = tasksToDo.TaskId }, tasksToDo);
-        }
-
         // DELETE: api/TasksToDoApi/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteTasksToDo(int id)
         {
             var tasksToDo = await _context.TasksToDo.FindAsync(id);
+            if (tasksToDo.UserId != UserId)
+                return Unauthorized("You cannot delete task which are not assigned to you");
             if (tasksToDo == null)
             {
                 return NotFound();
             }
-
             _context.TasksToDo.Remove(tasksToDo);
             await _context.SaveChangesAsync();
 
