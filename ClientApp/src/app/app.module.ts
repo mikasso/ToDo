@@ -11,7 +11,6 @@ import { TasksToDoComponent } from './tasks-to-do/tasks-to-do.component';
 import { LoginComponent } from './login-view/login-view.component';
 import { RegisterComponent } from './register/register.component';
 import { AuthInterceptor } from './login-services/authintercept.service';
-import { TasksToDo } from './models/TasksToDo';
 
 @NgModule({
   declarations: [
