@@ -14,6 +14,7 @@ export class LoginComponent implements OnInit {
   loading = false;
   submitted = false;
   returnUrl: string;
+  loginError = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -29,10 +30,10 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loginForm = new FormGroup({
-      login: new FormControl(),
-      password: new FormControl()
-    })
+    this.loginForm = this.formBuilder.group({
+      login: ['', Validators.required],
+      password: ['', [Validators.required]]
+    });
 
     // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
@@ -51,8 +52,7 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     this.submitted = true;
 
-    // reset alerts on submit
-    this.alertService.clear();
+
 
     // stop here if form is invalid
     if (this.loginForm.invalid) {
@@ -67,7 +67,7 @@ export class LoginComponent implements OnInit {
           this.router.navigate([this.returnUrl]);
         },
         error => {
-          this.alertService.error(error);
+          this.loginError = true;
           this.loading = false;
         });
   }

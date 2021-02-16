@@ -9,15 +9,7 @@ import { RegisterRequest } from '../models/RegisterRequest';
 export class UserService {
   constructor(private http: HttpClient) { }
 
-  getAll() {
-    //  return this.http.get<User[]>(`${config.apiUrl}/users`);
-  }
-
   register(request: RegisterRequest) {
     return this.http.post(`${getBaseUrl()}api/Users`, request);
-  }
-
-  delete(id: number) {
-    //return this.http.delete(`${config.apiUrl}/users/${id}`);
   }
 }
