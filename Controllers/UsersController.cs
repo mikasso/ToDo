@@ -26,9 +26,17 @@ namespace ToDoProject.Controllers
         [HttpPost]
         public async Task<ActionResult<Users>> RegisterUser(Users user)
         {
+            var alreadyExists = _context.Users.Where(
+                (u) => u.Login == user.Login ).FirstOrDefault() != null;
+            if (alreadyExists)
+                return Conflict("Account with this login already exists.");
+            alreadyExists = _context.Users.Where(
+                (u) => u.Email == user.Email).FirstOrDefault() != null;
+            if (alreadyExists)
+                return Conflict("Account with this email already exists.");
+            // Create new user 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-
             return CreatedAtAction("GetUser", new { id = user.UserId }, user);
         }
        

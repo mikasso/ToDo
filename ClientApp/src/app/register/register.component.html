@@ -36,4 +36,5 @@
         </button>
         <a [routerLink]="['/login']" class="btn btn-link">Cancel</a>
     </div>
+    <div *ngIf ="registerError" style="color: red"> {{ errorMsg }} </div>
 </form>

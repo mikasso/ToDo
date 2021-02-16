@@ -11,6 +11,8 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   loading = false;
   submitted = false;
+  registerError = false;
+  errorMsg = "";
 
   constructor(
     private formBuilder: FormBuilder,
@@ -47,13 +49,11 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
-
     // stop here if form is invalid
     if (this.registerForm.invalid) {
       return;
     }
-
-    this.loading = true;
+    this.clearError();
 
     this.userService.register(this.registerRequest)
       .pipe(first())
@@ -62,7 +62,19 @@ export class RegisterComponent implements OnInit {
           this.router.navigate(['/login']);
         },
         error => {
-          this.loading = false;
+          this.setError(error);
         });
+  }
+
+  clearError() {
+    this.loading = true;
+    this.registerError = false;
+    this.errorMsg = "";
+  }
+
+  setError(error) {
+    this.loading = false;
+    this.registerError = true;
+    this.errorMsg = "Error occured during registration. " + error.error;
   }
 }
