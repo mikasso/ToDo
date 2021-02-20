@@ -1,12 +1,11 @@
 import { Component, Inject } from '@angular/core';
 import { TasksToDo } from './../models/TasksToDo';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { getBaseUrl } from '../../main';
 import { HttpHeaders } from '@angular/common/http';
-import { Local } from 'protractor/built/driverProviders';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../login-services';
-import { AuthInterceptor } from '../login-services/authintercept.service';
+
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json',
@@ -35,10 +34,22 @@ export class TasksToDoComponent {
     if (!this.authService.isLogged) {
       this.router.navigate(['/login']);
     }
-    // otherwise get users tasks
-    var req = this.http.get<any>(this.getTasksApiURL()).subscribe(
+    this.getTasks();
+  }
+
+  getTasks(parameter: string = "all") {
+    console.log("get tasks()")
+    var req = this.http.get<any>(this.getTasksApiURL() + parameter).subscribe(
       result => this.tasks = result,
-      error => console.error(error)); 
+      error => this.handleError(error));
+  }
+
+  handleError(error: HttpErrorResponse): void {
+    if (error.status == 401) {
+      this.authService.logout();
+
+      this.router.navigate(['/login']);
+    }
   }
 
   toggleDone(task: TasksToDo) {
@@ -79,10 +90,6 @@ export class TasksToDoComponent {
     this.newTaskName = this.newTaskDescription = "";
     this.newTaskIsDone = false;
   }
-
-
-
-
 }
 
 

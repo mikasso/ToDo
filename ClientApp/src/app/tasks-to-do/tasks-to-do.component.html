@@ -2,41 +2,46 @@
 
 <div>
   <p *ngIf="!tasks"><em>Loading...</em></p>
-  <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="tasks">
-    <thead>
-      <tr>
-        <th>lp.</th>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Done</th>
-        <th>Action </th>
-      </tr>
-    </thead>
-    <tbody>
 
-      <tr>
-        <td>0.</td>
-        <td><input type="text" [(ngModel)]="newTaskName" class="textarea name-input" role="textbox" contenteditable /></td>
-        <td><input type="text" [(ngModel)]="newTaskDescription" class="textarea description-input" role="textbox" contenteditable /></td>
-        <td>
-          <input [(ngModel)]="newTaskIsDone" type="checkbox" />
-        </td>
-        <td><button class="add-new" (click)="addNewTask()"> Add new </button></td>
-      </tr>
+  <div *ngIf="tasks">
+    <tasks-filter (tasksFilterEvent)="getTasks($event)"></tasks-filter>
 
-      <tr *ngFor="let task of tasks; let i = index"
-          class="tr-task ">
-        <td> {{i+1}}. </td>
-        <td class="td-title {{ (task.isDone ? 'done' : '')}}"> {{ task.name }}</td>
-        <td class="td-description">{{ task.description }}</td>
-        <td>
-          <input type="checkbox" name="active"
-                 [checked]="task.isDone"
-                 (click)="toggleDone(task)">
-        </td>
-        <td> <button class="delete" (click)="deleteTask(i)">Delete</button></td>
-      </tr>
+    <table class='table table-striped' aria-labelledby="tableLabel" *ngIf="tasks">
+      <thead>
+        <tr>
+          <th>lp.</th>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Done</th>
+          <th>Action </th>
+        </tr>
+      </thead>
+      <tbody>
 
-    </tbody>
-  </table>
+        <tr>
+          <td>0.</td>
+          <td><input type="text" [(ngModel)]="newTaskName" class="textarea name-input" role="textbox" contenteditable /></td>
+          <td><input type="text" [(ngModel)]="newTaskDescription" class="textarea description-input" role="textbox" contenteditable /></td>
+          <td>
+            <input [(ngModel)]="newTaskIsDone" type="checkbox" />
+          </td>
+          <td><button class="add-new" (click)="addNewTask()"> Add new </button></td>
+        </tr>
+
+        <tr *ngFor="let task of tasks; let i = index"
+            class="tr-task ">
+          <td> {{i+1}}. </td>
+          <td class="td-title {{ (task.isDone ? 'done' : '')}}"> {{ task.name }}</td>
+          <td class="td-description">{{ task.description }}</td>
+          <td>
+            <input type="checkbox" name="active"
+                   [checked]="task.isDone"
+                   (click)="toggleDone(task)">
+          </td>
+          <td> <button class="delete" (click)="deleteTask(i)">Delete</button></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
 </div>

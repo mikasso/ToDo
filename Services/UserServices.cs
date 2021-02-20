@@ -26,10 +26,13 @@ namespace ToDoProject.Services
 
         public ToDoProjectContext _context { get; }
 
+        private int tokenLifeTime;
+
         public UserService(IOptions<AppSettings> appSettings, ToDoProjectContext _context)
         {
             _appSettings = appSettings.Value;
             this._context = _context;
+            this.tokenLifeTime = _appSettings.TokenLifeTime;
         }
 
 
@@ -68,7 +71,7 @@ namespace ToDoProject.Services
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("id", user.UserId.ToString()) }),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = DateTime.UtcNow.AddMinutes(tokenLifeTime),                                         
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);

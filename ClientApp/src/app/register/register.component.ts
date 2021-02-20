@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
-
 import { UserService, AuthenticationService } from './../login-services';
 import { RegisterRequest } from '../models/RegisterRequest';
 
@@ -13,6 +12,7 @@ export class RegisterComponent implements OnInit {
   submitted = false;
   registerError = false;
   errorMsg = "";
+
 
   constructor(
     private formBuilder: FormBuilder,

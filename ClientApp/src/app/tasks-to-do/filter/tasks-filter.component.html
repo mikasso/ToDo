@@ -1,0 +1,20 @@
+
+<fieldset>
+  <div>
+    <input #item1 type="radio" id="All" name="filter" value="all"
+           (click)="selectFilter(item1.value)" checked>
+    <label for="All">All</label>
+  </div>
+
+  <div>
+    <input #item2 type="radio" id="Done" name="filter" value="done"
+           (click)="selectFilter(item2.value)">
+    <label for="Done">Done</label>
+  </div>
+
+  <div>
+    <input #item3 type="radio" id="NotDone" name="filter" value="notDone"
+            (click)="selectFilter(item3.value)">
+    <label for="NotDone">Not done</label>
+  </div>
+</fieldset>

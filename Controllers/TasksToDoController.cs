@@ -30,11 +30,31 @@ namespace ToDoProject.Controllers
             }
         }
         // GET: api/TasksToDoApi
-        [HttpGet]
+        [HttpGet("all")]
         [Authorize]
         public async Task<ActionResult<IEnumerable<TasksToDo>>> GetTasksToDo()
         {
-            return await _context.TasksToDo.Where(task => task.UserId == UserId).ToListAsync();
+            return await _context.TasksToDo.Where(
+                task => task.UserId == UserId).
+                ToListAsync();
+        }
+
+        [HttpGet("done")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<TasksToDo>>> GetDoneTasksToDo()
+        {
+            return await _context.TasksToDo.Where(
+                task => task.UserId == UserId && task.IsDone == true).
+                ToListAsync();
+        }
+
+        [HttpGet("notDone")]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<TasksToDo>>> GetNotDoneTasksToDo()
+        {
+            return await _context.TasksToDo.Where(
+                task => task.UserId == UserId && task.IsDone == false).
+                ToListAsync();
         }
 
         // POST: api/TasksToDoApi
