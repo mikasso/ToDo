@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -11,6 +12,9 @@ import { LoginComponent } from './login-view/login-view.component';
 import { RegisterComponent } from './register/register.component';
 import { AuthInterceptor } from './login-services/authintercept.service';
 import { TasksFilterComponent } from './tasks-to-do/filter/tasks-filter.component';
+import { ModalComponent } from './modal-component/modal-component.component';
+
+
 
 @NgModule({
   declarations: [
@@ -20,8 +24,10 @@ import { TasksFilterComponent } from './tasks-to-do/filter/tasks-filter.componen
     TasksToDoComponent,
     LoginComponent,
     RegisterComponent,
+    ModalComponent,
   ],
   imports: [
+    NgbModule,
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,

@@ -1,9 +1,10 @@
 import { Component, Inject } from '@angular/core';
 import { TasksToDo } from './../models/TasksToDo';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../login-services';
+
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -19,7 +20,6 @@ const httpOptions = {
 
 export class TasksToDoComponent {
   public tasks: TasksToDo[];
-  private taskURL: string;
   newTaskName: string;
   newTaskDescription: string;
   newTaskIsDone: boolean;
@@ -28,7 +28,8 @@ export class TasksToDoComponent {
     private http: HttpClient,
     @Inject('BASE_URL') private baseUrl: string,
     private router: Router,
-    private authService: AuthenticationService) {
+    private authService: AuthenticationService
+   ) {
     // if user is not logged in then redirect to login page
     if (!this.authService.isLogged) {
       this.router.navigate(['/login']);
@@ -37,26 +38,14 @@ export class TasksToDoComponent {
   }
 
   getTasks(parameter: string = "all") {
-    console.log("get tasks()")
-    var req = this.http.get<any>(this.getTasksApiURL() + parameter).subscribe(
-      result => this.tasks = result,
-      error => this.handleError(error));
-  }
-
-  handleError(error: HttpErrorResponse): void {
-    if (error.status == 401) {
-      this.authService.logout();
-
-      this.router.navigate(['/login']);
-    }
+    this.http.get<any>(this.getTasksApiURL() + parameter).subscribe(
+      result => this.tasks = result);
   }
 
   toggleDone(task: TasksToDo) {
-    task.isDone = !task.isDone;
     var url = this.getTasksApiURL() + task.taskId.toString();
-    this.http.put(url, JSON.stringify(task), httpOptions).subscribe(
-      () => { },
-      err => console.log(err)
+    this.http.put<any>(url, JSON.stringify(task), httpOptions).subscribe(
+      result => task.isDone = !task.isDone
     );
   }
 
@@ -77,7 +66,6 @@ export class TasksToDoComponent {
     var url = this.getTasksApiURL() + this.tasks[index].taskId.toString();
     this.http.delete(url).subscribe(
       () => { this.tasks.splice(index, 1); },
-      err => console.log(err)
     );
   }
 

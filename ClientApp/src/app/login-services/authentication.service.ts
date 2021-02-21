@@ -33,8 +33,6 @@ export class AuthenticationService {
         localStorage.setItem('currentUser', JSON.stringify(user));
         localStorage.setItem('currentToken', (user.token));
         this.currentUserSubject.next(user);
-        console.log("logged in");
-        console.log(user);
         return user;
       }));
   }
