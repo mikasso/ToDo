@@ -27,10 +27,10 @@ import { TasksFilterComponent } from './tasks-to-do/filter/tasks-filter.componen
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forRoot([
-      { path: '', component: TasksToDoComponent, pathMatch: 'full' },
-      { path: 'login', component: LoginComponent },
-      { path: 'register', component: RegisterComponent }
-    ])
+    { path: '', component: TasksToDoComponent, pathMatch: 'full' },
+    { path: 'login', component: LoginComponent },
+    { path: 'register', component: RegisterComponent }
+], { relativeLinkResolution: 'legacy' })
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

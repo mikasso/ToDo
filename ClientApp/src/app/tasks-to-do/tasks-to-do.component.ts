@@ -1,7 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { TasksToDo } from './../models/TasksToDo';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { getBaseUrl } from '../../main';
 import { HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../login-services';
@@ -27,7 +26,7 @@ export class TasksToDoComponent {
 
   constructor(
     private http: HttpClient,
-    @Inject('BASE_URL') baseUrl: string,
+    @Inject('BASE_URL') private baseUrl: string,
     private router: Router,
     private authService: AuthenticationService) {
     // if user is not logged in then redirect to login page
@@ -83,7 +82,7 @@ export class TasksToDoComponent {
   }
 
   getTasksApiURL(): string {
-    return `${getBaseUrl()}api/TasksToDo/`;
+    return `${this.baseUrl}api/TasksToDo/`;
   }
 
   resetInputVars() {
