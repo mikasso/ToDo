@@ -1,20 +1,21 @@
 .td-title{
-    font-weight: 500;
+   font-weight: 500;
 }
 
-.td-description{
-  color: black;
+.table td  {
+  border: 2px solid;
 }
 
-.tr-task{
-    border: 2px solid;
+.done {
+  background-color: lightgreen !important;
 }
 
+.notdone {
+  background-color: lightgoldenrodyellow !important;
+}
 
-
-.done{
-    color: green;
-    border-color: black;
+:focus {
+  background-color: whitesmoke;
 }
 
 

@@ -22,56 +22,56 @@ namespace ToDoProject.Services
     public class UserService : IUserService
     {
 
-        private readonly AppSettings _appSettings;
+        private readonly AppSettings AppSettings;
 
-        public ToDoProjectContext _context { get; }
+        public ToDoProjectContext Context { get; }
 
-        private int tokenLifeTime;
+        private readonly int TokenLifeTime;
 
-        public UserService(IOptions<AppSettings> appSettings, ToDoProjectContext _context)
+        public UserService(IOptions<AppSettings> appSettings, ToDoProjectContext context)
         {
-            _appSettings = appSettings.Value;
-            this._context = _context;
-            this.tokenLifeTime = _appSettings.TokenLifeTime;
+            AppSettings = appSettings.Value;
+            Context = context;
+            TokenLifeTime = AppSettings.TokenLifeTime;
         }
 
 
 
         public AuthenticateResponse Authenticate(AuthenticateRequest model)
         {
-            var user = _context.Users.SingleOrDefault(x => x.Login == model.login && x.Password == model.password);
+            var user = Context.Users.SingleOrDefault(x => x.Login == model.login && x.Password == model.password);
 
             // return null if user not found
             if (user == null) return null;
 
             // authentication successful so generate jwt token
-            var token = generateJwtToken(user);
+            var token = GenerateJwtToken(user);
 
             return new AuthenticateResponse(user, token);
         }
 
         IEnumerable<Users> IUserService.GetAll()
         {
-            return _context.Users;
+            return Context.Users;
         }
 
         Users IUserService.GetById(int id)
         {
-            return _context.Users.FirstOrDefault(x => x.UserId == id);
+            return Context.Users.FirstOrDefault(x => x.UserId == id);
         }
 
 
         // helper methods
 
-        private string generateJwtToken(Users user)
+        private string GenerateJwtToken(Users user)
         {
             // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var key = Encoding.ASCII.GetBytes(AppSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("id", user.UserId.ToString()) }),
-                Expires = DateTime.UtcNow.AddMinutes(tokenLifeTime),                                         
+                Expires = DateTime.UtcNow.AddMinutes(TokenLifeTime),                                         
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);

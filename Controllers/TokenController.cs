@@ -11,9 +11,6 @@ namespace ToDoProject.Controllers
     [Route("api/[controller]")]
     public class TokenController : ControllerBase
     {
-        public const string SECRET_KEY = "abcdefghijk";
-
-
         private IUserService _userService;
 
         public TokenController(IUserService userService)

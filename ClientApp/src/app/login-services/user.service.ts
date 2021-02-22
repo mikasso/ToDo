@@ -8,7 +8,7 @@ import { RegisterRequest } from '../models/RegisterRequest';
 export class UserService {
   constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string ) { }
 
-  register(request: RegisterRequest) {
+  public register(request: RegisterRequest) {
     return this.http.post(`${this.baseUrl}api/Users`, request);
   }
 }

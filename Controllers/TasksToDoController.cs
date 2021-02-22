@@ -74,17 +74,17 @@ namespace ToDoProject.Controllers
 
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> PutTask(int id, TasksToDo task)
+        public async Task<IActionResult> PutTask(int id, TasksToDo updatedTask)
         {
-            if (id != task.TaskId)
+            if (id != updatedTask.TaskId)
             {
                 return BadRequest();
             }
 
-            if (task.UserId != UserId)
+            if (updatedTask.UserId != UserId)
                 return Unauthorized("You cannot update task which are not assigned to you");
 
-            _context.Entry(task).State = EntityState.Modified;
+            _context.Entry(updatedTask).State = EntityState.Modified;
 
             try
             {

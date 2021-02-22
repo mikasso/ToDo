@@ -16,7 +16,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     // Get the auth token from the service.
-    const authToken = localStorage.getItem('currentToken');
+    const authToken = this.authService.token;
     if (!authToken)
       return next.handle(req);
     // Clone the request and replace the original headers with
@@ -31,7 +31,7 @@ export class AuthInterceptor implements HttpInterceptor {
     );
   }
 
-  handleError(error: HttpErrorResponse): void {
+  private handleError(error: HttpErrorResponse): void {
     var errorMessage: string = "Error occured during connection with server";
     switch (error.status) {
       case 401: errorMessage = "Unauthorized access, please login again"; break;

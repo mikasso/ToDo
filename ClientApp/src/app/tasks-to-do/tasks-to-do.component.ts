@@ -44,7 +44,9 @@ export class TasksToDoComponent {
 
   toggleDone(task: TasksToDo) {
     var url = this.getTasksApiURL() + task.taskId.toString();
-    this.http.put<any>(url, JSON.stringify(task), httpOptions).subscribe(
+    var taskToSend: TasksToDo = JSON.parse(JSON.stringify(task));
+    taskToSend.isDone = !task.isDone;
+    this.http.put<any>(url, JSON.stringify(taskToSend), httpOptions).subscribe(
       result => task.isDone = !task.isDone
     );
   }
@@ -76,6 +78,10 @@ export class TasksToDoComponent {
   resetInputVars() {
     this.newTaskName = this.newTaskDescription = "";
     this.newTaskIsDone = false;
+  }
+
+  onNameChange(x) {
+    console.log(x);
   }
 }
 

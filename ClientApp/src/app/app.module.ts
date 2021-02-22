@@ -13,6 +13,7 @@ import { RegisterComponent } from './register/register.component';
 import { AuthInterceptor } from './login-services/authintercept.service';
 import { TasksFilterComponent } from './tasks-to-do/filter/tasks-filter.component';
 import { ModalComponent } from './modal-component/modal-component.component';
+import { CookieService } from 'ngx-cookie-service';
 
 
 
@@ -39,7 +40,7 @@ import { ModalComponent } from './modal-component/modal-component.component';
 ], { relativeLinkResolution: 'legacy' })
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, CookieService
   ],
   bootstrap: [AppComponent]
 })
