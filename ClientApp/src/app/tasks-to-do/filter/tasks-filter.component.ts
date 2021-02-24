@@ -13,7 +13,6 @@ export class TasksFilterComponent {
   @Output() tasksFilterEvent = new EventEmitter<string>();
 
   selectFilter(filtrOption: string) {
-    console.log(filtrOption);
     this.tasksFilterEvent.emit(filtrOption);
   }
 

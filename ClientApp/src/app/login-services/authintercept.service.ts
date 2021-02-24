@@ -4,7 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { tap } from 'rxjs/operators';
 import { ModalComponent } from '../modal-component/modal-component.component';
 import { Router } from '@angular/router';
-import { AuthenticationService } from '../login-services';
+import { AuthenticationService } from '../login-services/authentication.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

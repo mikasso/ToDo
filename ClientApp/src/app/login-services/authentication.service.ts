@@ -10,8 +10,9 @@ import { AuthenticationRequest } from '../models/AuthenticationRequest';
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<User>;
+  private user : User;
   public currentUser: Observable<User>;
-
+  
   constructor(private http: HttpClient,
     @Inject('BASE_URL') private baseUrl: string,
     private cookieService: CookieService) {
@@ -24,7 +25,7 @@ export class AuthenticationService {
   }
 
   public get currentUserValue(): User {
-    return this.currentUserSubject.value;
+    return this.user;
   }
 
   public get isLogged(): boolean {
@@ -40,6 +41,7 @@ export class AuthenticationService {
         this.cookieService.set('user', JSON.stringify(user), exp);
         this.cookieService.set('token', (user.token), exp);
         this.currentUserSubject.next(user);
+        this.user = user;
         return user;
       }));
   }

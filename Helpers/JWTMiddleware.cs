@@ -12,13 +12,13 @@ namespace ToDoProject
 {
     public class JwtMiddleware
     {
-        private readonly RequestDelegate _next;
-        private readonly AppSettings _appSettings;
+        private readonly RequestDelegate next;
+        private readonly AppSettings appSettings;
 
         public JwtMiddleware(RequestDelegate next, IOptions<AppSettings> appSettings)
         {
-            _next = next;
-            _appSettings = appSettings.Value;
+            this.next = next;
+            this.appSettings = appSettings.Value;
         }
 
         public async Task Invoke(HttpContext context, IUserService userService)
@@ -28,7 +28,7 @@ namespace ToDoProject
             if (token != null)
                 AttachUserToContext(context, userService, token);
 
-            await _next(context);
+            await next(context);
         }
 
         private void AttachUserToContext(HttpContext context, IUserService userService, string token)
@@ -36,7 +36,7 @@ namespace ToDoProject
             try
             {
                 var tokenHandler = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+                var key = Encoding.ASCII.GetBytes(appSettings.Secret);
                 tokenHandler.ValidateToken(token, new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
